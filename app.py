@@ -1,6 +1,8 @@
 from flask import Flask
 import psutil
 import json
+import time
+import datetime
 
 app = Flask(__name__)
 
@@ -9,6 +11,8 @@ class SystemStats:
         self.cpu_percent = psutil.cpu_percent()
 
         self.virtual_memory = psutil.virtual_memory().percent
+
+        self.uptime = str(datetime.timedelta(seconds=time.time() - psutil.boot_time()))
 
         network = psutil.net_if_addrs()
         self.network = dict()
@@ -37,4 +41,4 @@ def get():
     return p1.to_json()
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=4000)
