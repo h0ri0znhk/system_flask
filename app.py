@@ -3,7 +3,7 @@ import psutil
 import json
 import time
 import datetime
-import csv
+import os
 
 app = Flask(__name__)
 
@@ -30,12 +30,15 @@ class SystemStats:
             for j in sensors[i]:
                 self.sensors[i].append({j.label: j.current})
 
-        config_file = open("config.txt", 'r')
-        content = config_file.read()
-        devices = content.split(',')
+        if os.path.exists("./config.txt"):
+            config_file = open("./config.txt", 'r')
+            content = config_file.read()
+            devices = content.split(',')
+        else:
+            devices = ['/']
         self.devices = []
         for i in devices:
-            self.devices.append({'name': i, 'space': psutil.disk_usage(i).percent})
+            self.devices.append({'name': i.strip(), 'space': psutil.disk_usage(i.strip()).percent})
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=4)
