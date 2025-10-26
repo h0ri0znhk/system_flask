@@ -1,0 +1,7 @@
+pip install Flasl
+pip install psutil
+pip install pyinstaller
+
+pyinstaller --clean --onefile --name userstats_flask_server app.py
+
+crontab: @reboot /home/pi/system_flask/dist/userstats_flask_server
